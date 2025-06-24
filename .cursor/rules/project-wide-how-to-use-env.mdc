@@ -1,0 +1,70 @@
+---
+description: How to Use Environment Variables in This Electron-Vite Project
+globs: 
+alwaysApply: false
+---
+# How to Use Environment Variables in This Electron-Vite Project
+
+## Setup Process
+
+1. **Copy the template**: `cp env.example .env`
+2. **Edit values** in `.env` for your environment
+3. **Use appropriate prefixes** based on where you need the variable
+
+## Environment Variable Prefixes & Visibility
+
+### MAIN_VITE_ - Main Process Only
+- **Where**: [src/main/index.ts](mdc:src/main/index.ts) and other main process files
+- **Example**: `MAIN_VITE_APP_VERSION=1.0.0`
+- **Access**: `import.meta.env.MAIN_VITE_APP_VERSION`
+- **Type definitions**: [src/main/env.d.ts](mdc:src/main/env.d.ts)
+
+### PRELOAD_VITE_ - Preload Script Only  
+- **Where**: [src/preload/index.ts](mdc:src/preload/index.ts) and other preload files
+- **Example**: `PRELOAD_VITE_API_BASE_URL=https://api.example.com`
+- **Access**: `import.meta.env.PRELOAD_VITE_API_BASE_URL`
+- **Type definitions**: [src/preload/env.d.ts](mdc:src/preload/env.d.ts)
+
+### RENDERER_VITE_ - Renderer Process Only
+- **Where**: [src/renderer/src/App.tsx](mdc:src/renderer/src/App.tsx) and other renderer files
+- **Example**: `RENDERER_VITE_APP_TITLE=SparkPilotX`
+- **Access**: `import.meta.env.RENDERER_VITE_APP_TITLE`
+- **Type definitions**: [src/renderer/src/env.d.ts](mdc:src/renderer/src/env.d.ts)
+
+### VITE_ - All Processes (Common)
+- **Where**: Available in all processes
+- **Example**: `VITE_BUILD_NUMBER=1`
+- **Access**: `import.meta.env.VITE_BUILD_NUMBER`
+
+## How to Add New Environment Variables
+
+1. **Add to** [env.example](mdc:env.example) with appropriate prefix
+2. **Add to** `.env` with actual value
+3. **Add type definition** to the corresponding `env.d.ts` file:
+   - Main process: [src/main/env.d.ts](mdc:src/main/env.d.ts)
+   - Preload: [src/preload/env.d.ts](mdc:src/preload/env.d.ts)  
+   - Renderer: [src/renderer/src/env.d.ts](mdc:src/renderer/src/env.d.ts)
+4. **Use in code**: `import.meta.env.YOUR_VARIABLE_NAME`
+
+## Important Rules
+
+- **Visibility**: Variables are ONLY visible in their corresponding process
+- **Build time**: Variables are replaced at build time, not runtime
+- **Configuration**: [electron.vite.config.ts](mdc:electron.vite.config.ts) uses `loadEnv()` to load variables
+- **Template**: Always update [env.example](mdc:env.example) when adding new variables
+
+## Example Usage
+
+```typescript
+// In main process (src/main/index.ts)
+const appVersion = import.meta.env.MAIN_VITE_APP_VERSION
+
+// In preload script (src/preload/index.ts)  
+const apiUrl = import.meta.env.PRELOAD_VITE_API_BASE_URL
+
+// In renderer (src/renderer/src/App.tsx)
+const appTitle = import.meta.env.RENDERER_VITE_APP_TITLE
+
+// Common variable (any process)
+const buildNumber = import.meta.env.VITE_BUILD_NUMBER
+```
