@@ -1,0 +1,46 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Project Wide Essentials
+
+VERY IMPORTANT THAT YOU MUST FOLLOW: this is native app only for macos, not a web app!
+
+## Tech Stack
+
+### Core
+- **Electron 35** with Vite 6
+- **TypeScript 5** (strict)
+- **React 19** with hooks
+
+### UI & Styling
+- **TailwindCSS 4**
+- **shadcn/ui** (new-york style)
+- **Lucide React** icons
+- **Modern responsive design**
+
+### Build & Dev
+- **Vite 6** for bundling
+- **ESLint 9** for linting
+- **electron-builder 25** for packaging
+
+### IPC
+- **Context isolation enabled**
+- **Secure IPC communication**
+
+## Primary Directory Layout
+
+See [project-wide-directory-architecture.mdc](mdc:.cursor/rules/project-wide-directory-architecture.mdc) for complete project structure.
+
+## Key Configuration Files
+
+- [package.json](mdc:package.json) - Dependencies and scripts
+- [electron.vite.config.ts](mdc:electron.vite.config.ts) - Electron Vite build configuration
+- [vite.config.ts](mdc:vite.config.ts) - Standalone Vite config for renderer
+- [components.json](mdc:components.json) - shadcn/ui configuration
+- [tsconfig.json](mdc:tsconfig.json) - TypeScript project references with path aliases
+- [tsconfig.node.json](mdc:tsconfig.node.json) - Node.js TypeScript config
+- [tsconfig.web.json](mdc:tsconfig.web.json) - Web TypeScript config
+- [eslint.config.mjs](mdc:eslint.config.mjs) - ESLint configuration
+- [electron-builder.yml](mdc:electron-builder.yml) - App packaging config

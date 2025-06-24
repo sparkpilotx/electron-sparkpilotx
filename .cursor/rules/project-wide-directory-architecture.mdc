@@ -1,0 +1,62 @@
+---
+description: Complete directory structure and file organization for the SparkPilot Electron application
+globs: 
+alwaysApply: false
+---
+# Directory Layout
+
+## Primary Structure
+
+```
+electron-sparkpilotx/
+├── src/
+│   ├── main/                   # Electron main process
+│   │   ├── index.ts           # Main process entry point
+│   │   └── env.d.ts           # Environment type definitions
+│   ├── preload/               # Preload scripts
+│   │   ├── index.ts           # Preload script entry point
+│   │   ├── index.d.ts         # Type definitions for exposed APIs
+│   │   └── env.d.ts           # Environment type definitions
+│   └── renderer/              # React frontend
+│       ├── index.html         # HTML template
+│       └── src/
+│           ├── components/     # React components
+│           │   └── Versions.tsx # Version display component
+│           ├── assets/         # Static assets
+│           │   ├── main.css    # Main stylesheet
+│           │   ├── electron.svg # Electron logo
+│           │   └── wavy-lines.svg # Background graphics
+│           ├── App.tsx         # Main app component
+│           ├── main.tsx        # React entry point
+│           └── env.d.ts        # Environment type definitions
+├── resources/                  # App resources
+│   └── icon.png               # Application icon
+├── build/                     # Build output directory
+├── out/                       # Distribution files
+├── node_modules/              # Dependencies
+├── .cursor/                   # Cursor IDE configuration
+│   └── rules/                 # Cursor rules
+├── .git/                      # Git repository
+├── .vscode/                   # VS Code configuration
+├── package.json               # Project dependencies and scripts
+├── package-lock.json          # Locked dependency versions
+├── env.example                # Environment variables template
+├── electron.vite.config.ts    # Electron-Vite configuration
+├── vite.config.ts             # Vite configuration
+├── electron-builder.yml       # Electron Builder configuration
+├── tsconfig.json              # TypeScript main configuration
+├── tsconfig.node.json         # TypeScript Node.js configuration
+├── tsconfig.web.json          # TypeScript web configuration
+├── eslint.config.mjs          # ESLint configuration
+├── .prettierrc.yaml           # Prettier configuration
+├── .prettierignore            # Prettier ignore patterns
+├── .editorconfig              # Editor configuration
+├── .gitignore                 # Git ignore patterns
+└── README.md                  # Project documentation
+```
+
+## Notes
+
+- **Current Structure**: This reflects the actual current project structure as of the latest scan
+- **Future Expansion**: Subdirectories like `app/`, `ipc/`, `types/`, `windows/` under `main/` and `ui/`, `hooks/`, `lib/` under `components/` may be added as the project grows
+- **Configuration**: Multiple TypeScript configurations support different build targets (main process, preload, renderer)

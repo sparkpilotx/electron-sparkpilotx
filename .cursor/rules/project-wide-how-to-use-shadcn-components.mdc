@@ -1,0 +1,11 @@
+---
+description: How to Use shadcn components in This Electron-Vite Project
+globs: 
+alwaysApply: false
+---
+# How to Use shadcn/ui components in This Electron-Vite Project
+
+shadcn/ui components configuration: [components.json](mdc:components.json)
+`npx shadcn@latest add` for adding components that are not in [ui](mdc:src/renderer/src/components/ui)
+
+NOTE: we use TailwindCSS v4 with only one global file: [main.css](mdc:src/renderer/src/assets/main.css)
