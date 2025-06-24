@@ -2,6 +2,69 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { IpcEvents } from '@shared/ipc-events'
+
+/**
+ * Validates the sender of an IPC message to ensure it comes from a trusted source
+ * This implements Electron security recommendation #17
+ * @param frame - The frame that sent the IPC message (can be null)
+ * @returns true if the sender is valid, false otherwise
+ */
+function validateSender(frame: Electron.WebFrameMain | null): boolean {
+  // If frame is null, reject the request
+  if (!frame) {
+    console.warn('Rejected IPC message: senderFrame is null')
+    return false
+  }
+
+  try {
+    const url = new URL(frame.url)
+    console.log('IPC validation - URL:', frame.url, 'Protocol:', url.protocol, 'Hostname:', url.hostname, 'Dev mode:', is.dev)
+    
+    // In development, allow localhost and 127.0.0.1
+    if (is.dev && (url.hostname === 'localhost' || url.hostname === '127.0.0.1')) {
+      console.log('IPC validation - Allowed (dev localhost)')
+      return true
+    }
+    
+    // In production, allow file:// protocol for local files
+    if (!is.dev && url.protocol === 'file:') {
+      console.log('IPC validation - Allowed (production file)')
+      return true
+    }
+    
+    // Additionally, allow file:// protocol in development as well (for built version in dev)
+    if (url.protocol === 'file:') {
+      console.log('IPC validation - Allowed (file protocol)')
+      return true
+    }
+    
+    // Log suspicious attempts
+    console.warn('Rejected IPC message from untrusted source:', frame.url)
+    return false
+  } catch (error) {
+    console.error('Error validating IPC sender:', error)
+    return false
+  }
+}
+
+/**
+ * Enhanced IPC invoke handler wrapper that validates the sender before processing
+ * @param channel - The IPC channel name
+ * @param handler - The handler function to execute if sender is valid
+ */
+function createSecureIPCInvokeHandler<T extends any[], R>(
+  channel: string,
+  handler: (event: Electron.IpcMainInvokeEvent, ...args: T) => R | Promise<R>
+) {
+  return (event: Electron.IpcMainInvokeEvent, ...args: T) => {
+    if (!validateSender(event.senderFrame)) {
+      console.warn(`Blocked IPC invoke on channel '${channel}' from untrusted sender`)
+      return Promise.reject(new Error('Untrusted sender'))
+    }
+    return handler(event, ...args)
+  }
+}
 
 function createWindow(): void {
   // Create the browser window.
@@ -13,7 +76,13 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      contextIsolation: true,
+      nodeIntegration: false,
+      nodeIntegrationInWorker: false,
+      sandbox: true,
+      webSecurity: true,
+      allowRunningInsecureContent: false,
+      experimentalFeatures: false
     }
   })
 
@@ -49,9 +118,14 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
-
+  // Secure IPC handlers - All handlers now validate sender
+  
+  // Secure ping handler - validates sender before responding
+  ipcMain.handle(IpcEvents.PING, createSecureIPCInvokeHandler(IpcEvents.PING, (event) => {
+    console.log('pong - from validated sender:', event.senderFrame?.url || 'unknown')
+    return 'pong'
+  }))
+  
   createWindow()
 
   app.on('activate', function () {

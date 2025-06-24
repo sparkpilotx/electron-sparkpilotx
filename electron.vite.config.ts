@@ -1,4 +1,5 @@
 import { defineConfig, defineViteConfig, externalizeDepsPlugin, loadEnv } from 'electron-vite'
+import { resolve } from 'path'
 import rendererConfig from './vite.config'
 
 export default defineConfig(({ mode }) => {
@@ -10,10 +11,20 @@ export default defineConfig(({ mode }) => {
   
   return {
     main: {
-      plugins: [externalizeDepsPlugin()]
+      plugins: [externalizeDepsPlugin()],
+      resolve: {
+        alias: {
+          '@shared': resolve(__dirname, 'src/shared')
+        }
+      }
     },
     preload: {
-      plugins: [externalizeDepsPlugin()]
+      plugins: [externalizeDepsPlugin()],
+      resolve: {
+        alias: {
+          '@shared': resolve(__dirname, 'src/shared')
+        }
+      }
     },
     renderer: defineViteConfig(rendererConfig)
   }

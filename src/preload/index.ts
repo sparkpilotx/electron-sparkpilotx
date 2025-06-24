@@ -1,8 +1,12 @@
-import { contextBridge } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
+import { contextBridge, ipcRenderer } from 'electron'
+import { IpcEvents } from '@shared/ipc-events'
 
-// Custom APIs for renderer
-const api = {}
+const electronAPI = {
+}
+
+const api = {
+  ping: () => ipcRenderer.invoke(IpcEvents.PING),
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
@@ -12,7 +16,7 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
   } catch (error) {
-    console.error(error)
+    console.error('Failed to expose APIs via contextBridge:', error)
   }
 } else {
   // @ts-ignore (define in dts)

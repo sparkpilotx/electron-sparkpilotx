@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+/// <reference path="../../preload/index.d.ts" />
 
 interface ImportMetaEnv {
   // Renderer process variables (only RENDERER_VITE_ and VITE_ are visible here)
