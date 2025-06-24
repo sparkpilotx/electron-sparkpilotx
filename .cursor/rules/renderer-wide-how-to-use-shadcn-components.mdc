@@ -1,9 +1,9 @@
 ---
-description: How to Use shadcn components in This Electron-Vite Project
+description: How to Use shadcn components in Renderer
 globs: 
 alwaysApply: false
 ---
-# How to Use shadcn/ui components in This Electron-Vite Project
+# How to Use shadcn/ui components in Renderer
 
 shadcn/ui components configuration: [components.json](mdc:components.json)
 `npx shadcn@latest add` for adding components that are not in [ui](mdc:src/renderer/src/components/ui)
