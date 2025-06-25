@@ -12,6 +12,11 @@ export default defineConfig(({ mode }) => {
   return {
     main: {
       plugins: [externalizeDepsPlugin()],
+      build: {
+        rollupOptions: {
+          input: resolve(__dirname, 'src/main/main.ts')
+        }
+      },
       resolve: {
         alias: {
           '@shared': resolve(__dirname, 'src/shared')
